@@ -16,6 +16,9 @@ myApp.controller('TaskController', ['TaskFactory', function(TaskFactory){
   self.completeTask = function(taskId) {
     TaskFactory.completeTask(taskId);
   }
+  self.updateTask = function(task) {
+    TaskFactory.updateTask(task);
+  }
 
   self.uncompleteTask = function(taskId) {
     TaskFactory.uncompleteTask(taskId);

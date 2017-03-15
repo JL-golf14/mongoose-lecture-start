@@ -46,6 +46,16 @@ myApp.factory('TaskFactory', ['$http', function($http) {
     });
   }
 
+  function updateTask(task) {
+    console.log('task id is',task);
+    $http({
+      method: 'PUT',
+      url: '/tasks/' + task._id,
+      data:task
+    }).then(function(response) {
+      getTasks();
+    });
+  }
   function uncompleteTask(taskId){
     $http({
       method: 'PUT',
@@ -57,6 +67,7 @@ myApp.factory('TaskFactory', ['$http', function($http) {
 
   // this is the public API, if it's not in here, your controller won't see it
   return {
+    updateTask: updateTask,
     allTasks: factoryTasks,
     updateTasks: getTasks,
     addTask: addTask,

@@ -57,23 +57,15 @@ router.delete('/:id', function(req, res) {
 
   // db query
   // DELETE FROM task WHERE id=7
-  pool.connect(function(err, client, done) {
-    if(err){
-      console.log(err);
+  Task.findByIdAndRemove(
+    {_id: taskToDeleteId},
+    function (err, result) {
+      if (err) {console.log('we got an error with get:', err);
       res.sendStatus(500);
     }else{
-      client.query('DELETE FROM task WHERE id=$1;',
-        [taskToDeleteId], function(err, result) {
-          done();
-          if(err){
-            console.log(err);
-            res.sendStatus(500); // the world exploded
-          }else{
-            res.sendStatus(200);
-          }
-      });
+      res.send(result);
     }
-  });
+    })
 });
 
 
@@ -84,26 +76,24 @@ router.put('/complete/:id', function(req, res) {
   console.log('hit complete route');
   console.log('here is the id to complete ->', taskToCompleteId);
 
-  // db query
-  // UPDATE task SET status = TRUE WHERE ID = 4;
-  pool.connect(function(err, client, done) {
-    if(err){
-      console.log(err);
+        // db query
+  Task.findByIdAndUpdate(
+    {_id: req.params.id},
+    {$set:
+      {status: true}
+    },function (err, result) {
+      if (err) {console.log('we got an error with get:', err);
       res.sendStatus(500);
     }else{
-      client.query('UPDATE task SET status=TRUE WHERE ID=$1;',
-        [taskToCompleteId], function(err, result) {
-          done();
-          if(err){
-            console.log(err);
-            res.sendStatus(500); // the world exploded
-          }else{
-            res.sendStatus(200);
-          }
-      });
+      res.send(result);
     }
+    })
   });
-});
+
+
+
+
+
 
 // create a new task in the db
 router.put('/uncomplete/:id', function(req, res) {
@@ -112,24 +102,23 @@ router.put('/uncomplete/:id', function(req, res) {
   console.log('here is the id to complete ->', taskToUncompleteId);
 
   // db query
-  // UPDATE task SET status = TRUE WHERE ID = 4;
-  pool.connect(function(err, client, done) {
-    if(err){
-      console.log(err);
+  var taskToCompleteId = req.params.id;
+  console.log('hit complete route');
+  console.log('here is the id to complete ->', taskToCompleteId);
+
+        // db query
+  Task.findByIdAndUpdate(
+    {_id: req.params.id},
+    {$set:
+      {status: false}
+    },function (err, result) {
+      if (err) {console.log('we got an error with get:', err);
       res.sendStatus(500);
     }else{
-      client.query('UPDATE task SET status=FALSE WHERE ID=$1;',
-        [taskToUncompleteId], function(err, result) {
-          done();
-          if(err){
-            console.log(err);
-            res.sendStatus(500); // the world exploded
-          }else{
-            res.sendStatus(200);
-          }
-      });
+      res.send(result);
     }
+    })
   });
-});
+
 
 module.exports = router;

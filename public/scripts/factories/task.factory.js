@@ -37,6 +37,7 @@ myApp.factory('TaskFactory', ['$http', function($http) {
   }
 
   function completeTask(taskId) {
+    console.log('task id is',taskId);
     $http({
       method: 'PUT',
       url: '/tasks/complete/' + taskId

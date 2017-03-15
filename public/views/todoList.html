@@ -12,7 +12,7 @@
   <!-- {{task.name}} and the id number is {{task.id}} -->
 
   <span>  <input ng-model="task.name" class="col-xs-6"> </span>
-
+<span>  <input ng-model="task.description" class="col-xs-6"> </span>
   <span class="col-xs-3" >
     <button ng-click="tc.completeTask(task._id)" class="btn btn-primary">Complete</button>
   </span>
@@ -23,5 +23,5 @@
   <span class="col-xs-3">
     <button ng-click="tc.deleteTask(task._id)" class="btn btn-danger">Delete</button>
   </span>
-    <button ng-click="tc.updateTask(task)">change task description</button>
+    <button ng-click="tc.updateTask(task)">change task name or description</button>
 </div>

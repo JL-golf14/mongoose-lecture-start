@@ -7,7 +7,8 @@ mongoose.model(
   'Task',
   new Schema({
     "name": String,
-    "status": {type: Boolean, default: false}
+    "status": {type: Boolean, default: false},
+    "description": String
   },
 {collection:'tasks'}
 ));

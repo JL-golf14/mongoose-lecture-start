@@ -102,7 +102,8 @@ router.put('/complete/:id', function(req, res) {
           // db query
     Task.findByIdAndUpdate(
       {_id: taskToCompleteId},
-      {$set: {name: updatedTaskObject.name}},
+      {$set: {name: updatedTaskObject.name}}
+      {$set: {name: updatedTaskObject.description}},
       function (err, result) {
         if (err) {console.log('we got an error with get:', err);
         res.sendStatus(500);

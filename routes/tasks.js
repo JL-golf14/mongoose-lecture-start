@@ -1,40 +1,31 @@
 
 // tasks.js
 var router = require('express').Router();
-var pg = require('pg');
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-var config = {
-  database: 'phi-tasks',
-  host: 'localhost',
-  port: 5432,
-  max: 10,
-  idleTimeoutMillis: 30000
-};
+mongoose.connect('mongodb://localhost/phi');
 
-var pool = new pg.Pool(config);
+mongoose.model(
+  'Task',
+  new Schema({
+    "name": String,
+    "status": {type: Boolean, default: false}
+  },
+{collection:'tasks'}
+));
 
+var Task = mongoose.model('Task');
 // get all tasks
 router.get('/', function(req, res) {
   console.log('hit my get all tasks route');
-  pool.connect(function(err, client, done) {
-    if(err){
-      console.log(err);
-      res.sendStatus(500);
-    }else{
-      // SELECT * FROM task;
-      client.query('SELECT * FROM task ORDER BY status, id;', function(err, result) {
-        done(); // close the connection db
-
-        if(err){
-          console.log(err);
-          res.sendStatus(500); // the world exploded
-        }else{
-          console.log(result.rows);
-          res.status(200).send(result.rows);
-        }
-      });
-    }
-  });
+  Task.find({}, function(err, result){
+    if (err) {console.log('we got an error with get:', err);
+    res.sendStatus(500);
+  }else{
+    res.send(result);
+  }
+  })
 });
 
 // create a new task in the db
@@ -43,26 +34,19 @@ router.post('/', function(req, res) {
   console.log('here is the body ->', req.body);
 
   var taskObject = req.body;
+  var addedTask = new Task({
+    name: taskObject.taskName
+  })
 
   // db query
-  // INSERT INTO task (name) VALUES ('test');
-  pool.connect(function(err, client, done) {
-    if(err){
-      console.log(err);
-      res.sendStatus(500);
-    }else{
-      client.query('INSERT INTO task (name) VALUES ($1);',
-        [taskObject.taskName], function(err, result) {
-          done();
-          if(err){
-            console.log(err);
-            res.sendStatus(500); // the world exploded
-          }else{
-            res.sendStatus(201);
-          }
-      });
-    }
-  });
+ addedTask.save(function(err,result){
+   if (err)
+   {console.log('we got an error saving:', err);
+   res.sendStatus(500);
+ }else{
+   res.sendStatus(201);
+ }
+ })
 });
 
 // create a new task in the db
